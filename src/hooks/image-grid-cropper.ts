@@ -84,6 +84,18 @@ export const useImageGridCropper = () => {
     };
   }, []);
 
+  const getTouchPos = useCallback((e: React.TouchEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return { x: 0, y: 0 };
+
+    const rect = canvas.getBoundingClientRect();
+    const touch = e.touches[0];
+    return {
+      x: (touch.clientX - rect.left) * (canvas.width / rect.width),
+      y: (touch.clientY - rect.top) * (canvas.height / rect.height),
+    };
+  }, []);
+
   const findNearestLine = useCallback(
     (mousePos: { x: number; y: number }) => {
       const canvas = canvasRef.current;
@@ -231,6 +243,7 @@ export const useImageGridCropper = () => {
     handleImageUpload,
     updateGridSize,
     getMousePos,
+    getTouchPos,
     findNearestLine,
     updateLinePosition,
     cropImage,

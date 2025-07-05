@@ -41,6 +41,7 @@ export default function Home() {
     handleImageUpload,
     updateGridSize,
     getMousePos,
+    getTouchPos,
     findNearestLine,
     updateLinePosition,
     cropImage,
@@ -87,6 +88,43 @@ export default function Home() {
   };
 
   const handleMouseUp = () => {
+    setDragState({
+      isDragging: false,
+      dragType: null,
+      dragIndex: -1,
+    });
+    setCursor("crosshair");
+  };
+
+  const handleTouchStart = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (!image) return;
+
+    const touchPos = getTouchPos(e);
+    const nearestLine = findNearestLine(touchPos);
+
+    if (nearestLine) {
+      setDragState({
+        isDragging: true,
+        dragType: nearestLine.type,
+        dragIndex: nearestLine.index,
+      });
+      setCursor(nearestLine.type === "vertical" ? "ew-resize" : "ns-resize");
+      e.preventDefault();
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (!image) return;
+
+    const touchPos = getTouchPos(e);
+
+    if (dragState.isDragging) {
+      updateLinePosition(touchPos);
+      e.preventDefault();
+    }
+  };
+
+  const handleTouchEnd = () => {
     setDragState({
       isDragging: false,
       dragType: null,
@@ -308,6 +346,9 @@ export default function Home() {
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
             cursor={cursor}
             gridColor={gridColor}
           />

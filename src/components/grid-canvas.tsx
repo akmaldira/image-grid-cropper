@@ -12,6 +12,9 @@ interface GridCanvasProps {
   onMouseMove: (e: React.MouseEvent<HTMLCanvasElement>) => void;
   onMouseUp: () => void;
   onMouseLeave: () => void;
+  onTouchStart?: (e: React.TouchEvent<HTMLCanvasElement>) => void;
+  onTouchMove?: (e: React.TouchEvent<HTMLCanvasElement>) => void;
+  onTouchEnd?: () => void;
   cursor: string;
   gridColor: string;
 }
@@ -27,6 +30,9 @@ export const GridCanvas: React.FC<GridCanvasProps> = ({
   onMouseMove,
   onMouseUp,
   onMouseLeave,
+  onTouchStart,
+  onTouchMove,
+  onTouchEnd,
   cursor,
   gridColor,
 }) => {
@@ -140,6 +146,9 @@ export const GridCanvas: React.FC<GridCanvasProps> = ({
       onMouseMove={onMouseMove}
       onMouseUp={onMouseUp}
       onMouseLeave={onMouseLeave}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
       style={{
         cursor,
         border: "2px solid #ddd",
@@ -154,6 +163,7 @@ export const GridCanvas: React.FC<GridCanvasProps> = ({
         `,
         backgroundSize: "20px 20px",
         backgroundPosition: "0 0, 0 10px, 10px -10px, -10px 0px",
+        touchAction: "none", // Prevent default touch behaviors like scrolling
       }}
     />
   );
