@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useImageGridCropper } from "@/hooks/image-grid-cropper";
+import { sendGTMEvent } from "@next/third-parties/google";
 import JSZip from "jszip";
 import { Paperclip, X } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -212,10 +213,15 @@ export default function Home() {
           value={file ? [file] : []}
           onValueChange={(files) => {
             if (files && files.length > 0) {
-              console.log("HANDLE IMAGE UPLOAD");
               handleImageUpload(files[0]);
+              sendGTMEvent({
+                event: "image_uploaded",
+                value: {
+                  image_name: files[0].name,
+                  image_size: files[0].size,
+                },
+              });
             } else {
-              console.log("HANDLE IMAGE UPLOAD NULL");
               handleImageUpload(null);
             }
           }}
@@ -316,6 +322,14 @@ export default function Home() {
 
           <Button
             onClick={() => {
+              sendGTMEvent({
+                event: "crop_image",
+                value: {
+                  rows: rows,
+                  cols: cols,
+                  grid_color: gridColor,
+                },
+              });
               cropImage();
               setTimeout(() => {
                 document.getElementById("crop-results")?.scrollIntoView({
@@ -365,6 +379,14 @@ export default function Home() {
           <div className="flex justify-center mt-6">
             <Button
               onClick={() => {
+                sendGTMEvent({
+                  event: "download_zip_file",
+                  value: {
+                    rows: rows,
+                    cols: cols,
+                    grid_color: gridColor,
+                  },
+                });
                 downloadZip();
               }}
             >
