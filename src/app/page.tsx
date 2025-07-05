@@ -145,6 +145,9 @@ export default function Home() {
     maxFiles: 1,
     maxSize: 1024 * 1024 * 50,
     multiple: false,
+    accept: {
+      "image/*": [".png", ".jpg", ".jpeg", ".webp", ".svg"],
+    },
   };
 
   // const downloadAll = () => {
@@ -213,7 +216,16 @@ export default function Home() {
           value={file ? [file] : []}
           onValueChange={(files) => {
             if (files && files.length > 0) {
-              handleImageUpload(files[0]);
+              const file = files[0];
+
+              if (!file.type.startsWith("image")) {
+                toast.error(
+                  "SVG files are not supported. Please upload a PNG, JPG, or JPEG file."
+                );
+                return;
+              }
+
+              handleImageUpload(file);
               sendGTMEvent({
                 event: "image_uploaded",
                 value: {
