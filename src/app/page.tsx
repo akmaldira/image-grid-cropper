@@ -164,7 +164,7 @@ export default function Home() {
         <p className="text-blue-600">
           1. Upload an image and set the number of rows/columns
           <br />
-          2. Drag the red grid lines to adjust cell positions
+          2. Drag the grid lines to adjust cell positions
           <br />
           3. Click &quot;Crop Image&quot; to generate the pieces
         </p>
